@@ -1,12 +1,12 @@
 <template>
 
-  <DemoView />
+  <HomeView />
 </template>
 
 
 <script setup>
 
-import DemoView from './views/DemoView.vue'
+import HomeView from './views/HomeView.vue'
 </script>
 
 

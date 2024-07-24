@@ -16,14 +16,12 @@ onMounted(() => {
     const ctx = document.getElementById('canvas')
     const gl = ctx.getContext('webgl')
 
-
-
     const VERTEX_SHADER_SOURCE = `
     attribute vec4 a_position;
-    attribute float a_scale;
+    uniform mat4 mat;
     void main() {
-        gl_Position = vec4(a_position.x*a_scale,a_position.y,a_position.z,1.0);
-        gl_PointSize = 58.0;
+        gl_Position = mat * a_position;
+        gl_PointSize = 10.0;
     }
     `
     const FRAGMENT_SHADER_SOURCE = `
@@ -36,7 +34,16 @@ onMounted(() => {
     const program = useShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE)
 
     const a_position = gl.getAttribLocation(program, 'a_position')
-    const a_scale = gl.getAttribLocation(program, 'a_scale')
+    const mat = gl.getUniformLocation(program, 'mat')
+
+    function getScaleMatrix (x = 1, y = 1, z = 1) {
+        return new Float32Array([
+            x, 0, 0, 0,
+            0, y, 0, 0,
+            0, 0, z, 0,
+            0, 0, 0, 1
+        ])
+    }
 
     const points = new Float32Array([
         -0.8, 0.0,
@@ -48,34 +55,26 @@ onMounted(() => {
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
     gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW)
-
     gl.useProgram(program)
-
     gl.enableVertexAttribArray(a_position)
-
     gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0)
-
-
-
     gl.clear(gl.COLOR_BUFFER_BIT)
 
-    let x = 1
-
+    let x = -1
     function draw () {
         x += 0.01
-        if (x > 2) {
-            x = 1
+        if (x > 1) {
+            x = -1
         }
+        const matrix = getScaleMatrix(x, x)
         gl.clearColor(0.0, 0.0, 0.0, 1.0)
         gl.clear(gl.COLOR_BUFFER_BIT)
-        gl.vertexAttrib1f(a_scale, x)
+        gl.uniformMatrix4fv(mat, false, matrix)
         gl.drawArrays(gl.TRIANGLES, 0, 3)
         requestAnimationFrame(draw)
     }
 
     draw()
-
-
 
 })
 

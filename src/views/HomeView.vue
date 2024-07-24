@@ -20,9 +20,9 @@ onMounted(() => {
 
     const VERTEX_SHADER_SOURCE = `
     attribute vec4 a_position;
-    attribute float a_translation;
+    attribute float a_scale;
     void main() {
-        gl_Position = vec4(a_position.x+a_translation,a_position.y,a_position.z,1.0);
+        gl_Position = vec4(a_position.x*a_scale,a_position.y,a_position.z,1.0);
         gl_PointSize = 58.0;
     }
     `
@@ -36,10 +36,10 @@ onMounted(() => {
     const program = useShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE)
 
     const a_position = gl.getAttribLocation(program, 'a_position')
-    const a_translation = gl.getAttribLocation(program, 'a_translation')
+    const a_scale = gl.getAttribLocation(program, 'a_scale')
 
     const points = new Float32Array([
-        -0.2, 0.0,
+        -0.8, 0.0,
         0.8, 0.5,
         0.5, -0.5,
     ])
@@ -55,19 +55,20 @@ onMounted(() => {
 
     gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0)
 
-    gl.clearColor(0.0, 0.0, 0.0, 1.0)
+
 
     gl.clear(gl.COLOR_BUFFER_BIT)
 
-    let x = -1
+    let x = 1
 
     function draw () {
         x += 0.01
-        if (x > 1) {
-            x = -1
+        if (x > 2) {
+            x = 1
         }
-        gl.vertexAttrib1f(a_translation, x)
+        gl.clearColor(0.0, 0.0, 0.0, 1.0)
         gl.clear(gl.COLOR_BUFFER_BIT)
+        gl.vertexAttrib1f(a_scale, x)
         gl.drawArrays(gl.TRIANGLES, 0, 3)
         requestAnimationFrame(draw)
     }

@@ -24,13 +24,14 @@ onMounted(() => {
     const renderer = new THREE.WebGLRenderer({ canvas: canvas.value })
     renderer.setSize(window.innerWidth, window.innerHeight)
 
-    // 创建一个球体几何体和材质
-    // const geometry = new THREE.SphereGeometry(1, 32, 32)
-    // const material = new THREE.MeshBasicMaterial({ color: 0xffff00 })
-    // const sphere = new THREE.Mesh(geometry, material)
-    // scene.add(sphere)
+    //创建一个球体几何体和材质
+    const geometry = new THREE.SphereGeometry(1, 32, 32)
+    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 })
+    const sphere = new THREE.Mesh(geometry, material)
+    sphere.position.set(20, 20, 0)
+    scene.add(sphere)
 
-    const cube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0x00ff00 }))
+    const cube = new THREE.Mesh(new THREE.BoxGeometry(10, 10, 10), new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true }))
     scene.add(cube)
 
 
@@ -39,9 +40,12 @@ onMounted(() => {
 
     // 渲染循环
     const animate = () => {
-        requestAnimationFrame(animate)
+        cube.rotation.x += 0.01
+        cube.rotation.y += 0.01
+
         controls.update()
         renderer.render(scene, camera)
+        requestAnimationFrame(animate)
     }
     animate()
 

@@ -72,8 +72,6 @@ onMounted(() => {
     draw()
 
 
-
-
 })
 
 

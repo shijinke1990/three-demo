@@ -11,10 +11,6 @@ import { onMounted, ref } from 'vue'
 import useShader from '../composables/useShader'
 
 const canvas = ref(null)
-const points = ref([])
-const color = ref('red')
-
-
 
 onMounted(() => {
     const ctx = document.getElementById('canvas')
@@ -37,81 +33,46 @@ onMounted(() => {
     }
     `
     const FRAGMENT_SHADER_SOURCE = `
+    precision mediump float;
     uniform vec4 u_color;
     void main() {
         gl_FragColor = u_color;
     }
     `
 
-
-
     const program = useShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE)
+
+    gl.useProgram(program)
 
     const a_position = gl.getAttribLocation(program, 'a_position')
 
-    gl.vertexAttrib3f(a_position, 0.3, 0.0, 0.0)
+    const u_color = gl.getUniformLocation(program, 'u_color')
 
 
-    gl.useProgram(program)
-    gl.drawArrays(gl.POINTS, 0, 1)
+    gl.uniform4f(u_color, 1.0, 0.0, 0.0, 1.0)
 
-    let x = 0
-    // setInterval(() => {
-    //     x += 0.01
-    //     if (x > 1) x = -1
-    //     gl.vertexAttrib3f(a_position, x, 0.0, 0.0)
-    //     gl.drawArrays(gl.POINTS, 0, 1)
+    const points = []
 
 
-    // }, 100)
-    const draw = () => {
-        x += 0.01
-        if (x > 1) x = -1
-        gl.vertexAttrib3f(a_position, x, 0.0, 0.0)
-        gl.drawArrays(gl.POINTS, 0, 1)
+    ctx.onmousemove = (e) => {
+        const { x, y } = translatePosition(e.offsetX, e.offsetY)
+        points.push({ x, y })
+    }
+
+    function draw () {
+        console.info('draw', points)
+        gl.clear(gl.COLOR_BUFFER_BIT)
+        points.forEach(point => {
+            gl.vertexAttrib3f(a_position, point.x, point.y, 0.0)
+            gl.drawArrays(gl.POINTS, 0, 1)
+        })
         requestAnimationFrame(draw)
     }
 
-    // requestAnimationFrame(() => {
-    //     x += 0.01
-    //     if (x > 1) x = -1
-    //     gl.vertexAttrib3f(a_position, x, 0.0, 0.0)
-    //     gl.drawArrays(gl.POINTS, 0, 1)
-
-
-    // })
-
-    // draw()
-
-    ctx.onmousemove = (e) => {
-        console.log('click')
-        console.log(e.clientX)
-        console.log(e.clientY)
-        console.log(e.offsetX)
-        console.log(e.offsetY)
-        const domPosition = ctx.getBoundingClientRect()
-        console.log(domPosition)
-        const x = e.clientX - domPosition.left
-        const y = e.clientY - domPosition.top
-
-        console.log(x, y)
-
-        const { x: tx, y: ty } = translatePosition(x, y)
-
-        console.log(tx, ty)
-
-        points.value.push({ x: tx, y: ty })
-
-        for (let i = 0; i < points.value.length; i++) {
-            gl.vertexAttrib3f(a_position, points.value[i].x, points.value[i].y, 0.0)
-            gl.drawArrays(gl.POINTS, 0, 1)
-
-
-        }
+    draw()
 
 
 
-    }
 
 })
 

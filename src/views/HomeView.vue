@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import useShader from '../composables/useShader'
 
 const canvas = ref(null)
@@ -16,20 +16,14 @@ onMounted(() => {
     const ctx = document.getElementById('canvas')
     const gl = ctx.getContext('webgl')
 
-    const translatePosition = (x, y) => {
-        const halfWidth = ctx.width / 2
-        const halfHeight = ctx.height / 2
-        return {
-            x: (x - halfWidth) / halfWidth,
-            y: (halfHeight - y) / halfHeight
-        }
-    }
+
 
     const VERTEX_SHADER_SOURCE = `
     attribute vec4 a_position;
+    attribute float a_translation;
     void main() {
-        gl_Position = a_position;
-        gl_PointSize = 5.0;
+        gl_Position = vec4(a_position.x+a_translation,a_position.y,a_position.z,1.0);
+        gl_PointSize = 58.0;
     }
     `
     const FRAGMENT_SHADER_SOURCE = `
@@ -39,37 +33,47 @@ onMounted(() => {
         gl_FragColor = u_color;
     }
     `
-
     const program = useShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE)
+
+    const a_position = gl.getAttribLocation(program, 'a_position')
+    const a_translation = gl.getAttribLocation(program, 'a_translation')
+
+    const points = new Float32Array([
+        -0.2, 0.0,
+        0.8, 0.5,
+        0.5, -0.5,
+    ])
+
+    const buffer = gl.createBuffer()
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+    gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW)
 
     gl.useProgram(program)
 
-    const a_position = gl.getAttribLocation(program, 'a_position')
+    gl.enableVertexAttribArray(a_position)
 
-    const u_color = gl.getUniformLocation(program, 'u_color')
+    gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0)
 
+    gl.clearColor(0.0, 0.0, 0.0, 1.0)
 
-    gl.uniform4f(u_color, 1.0, 0.0, 0.0, 1.0)
+    gl.clear(gl.COLOR_BUFFER_BIT)
 
-    const points = []
-
-
-    ctx.onmousemove = (e) => {
-        const { x, y } = translatePosition(e.offsetX, e.offsetY)
-        points.push({ x, y })
-    }
+    let x = -1
 
     function draw () {
-        console.info('draw', points)
+        x += 0.01
+        if (x > 1) {
+            x = -1
+        }
+        gl.vertexAttrib1f(a_translation, x)
         gl.clear(gl.COLOR_BUFFER_BIT)
-        points.forEach(point => {
-            gl.vertexAttrib3f(a_position, point.x, point.y, 0.0)
-            gl.drawArrays(gl.POINTS, 0, 1)
-        })
+        gl.drawArrays(gl.TRIANGLES, 0, 3)
         requestAnimationFrame(draw)
     }
 
     draw()
+
 
 
 })

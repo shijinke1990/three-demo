@@ -30,43 +30,37 @@ onMounted(() => {
     directionalLight.position.set(5, 5, 5).normalize()
     scene.add(directionalLight)
 
-    // 创建平面几何体和材质
-    const planeGeometry = new THREE.PlaneGeometry(5, 5)
+    // 加载纹理
     const textureLoader = new THREE.TextureLoader()
+    const texture = textureLoader.load('/public/test.webp', () => {
+        // 创建长方体
+        const boxGeometry = new THREE.BoxGeometry(20, 20, 20)
+        console.log(boxGeometry)
 
-    const texture = textureLoader.load('/public/2.jpg', () => {
-        // 创建立方体几何体
-        // 手动设置 UV 映射
-        const uvAttribute = planeGeometry.attributes.uv
+        // // 手动设置 UV 映射
+        // const uvAttribute = boxGeometry.attributes.uv
         // const uvMapping = [
-        //     // Front face (正面)
         //     0, 0, 1, 0, 1, 1, 0, 1,
-        //     // Back face (背面) - 不覆盖纹理
+        //     // Back face (背面) - 不贴图
         //     0, 0, 0, 0, 0, 0, 0, 0,
         //     // Top face (顶部)
-        //     0, 0, 1, 0, 1, 1, 0, 1,
+        //     0, 1, 1, 1, 1, 0, 0, 0,
         //     // Bottom face (底部)
-        //     0, 0, 1, 0, 1, 1, 0, 1,
+        //     0, 1, 1, 1, 1, 0, 0, 0,
         //     // Right face (右侧)
-        //     0, 0, 1, 0, 1, 1, 0, 1,
+        //     0, 1, 1, 1, 1, 0, 0, 0,
         //     // Left face (左侧)
-        //     0, 0, 1, 0, 1, 1, 0, 1
+        //     0, 1, 1, 1, 1, 0, 0, 0
         // ]
-
-        const uvMapping = [
-            // Front face (正面)
-            0, 1, 1, 1, 1, 0, 0, 0,
-
-        ]
-        for (let i = 0; i < uvAttribute.count; i++) {
-            uvAttribute.setXY(i, uvMapping[i * 2], uvMapping[i * 2 + 1])
-        }
+        // for (let i = 0; i < uvAttribute.count; i++) {
+        //     uvAttribute.setXY(i, uvMapping[i * 2], uvMapping[i * 2 + 1])
+        // }
 
         // 创建材质
         const material = new THREE.MeshBasicMaterial({ map: texture })
-        const plane = new THREE.Mesh(planeGeometry, material)
+        const box = new THREE.Mesh(boxGeometry, material)
+        scene.add(box)
 
-        scene.add(plane)
         // 动画循环
         const animate = () => {
             requestAnimationFrame(animate)
@@ -74,13 +68,6 @@ onMounted(() => {
         }
         animate()
     })
-
-    // 动画循环
-    const animate = () => {
-        requestAnimationFrame(animate)
-        renderer.render(scene, camera)
-    }
-    animate()
 
     // 添加轨道控制
     const controls = new OrbitControls(camera, renderer.domElement)

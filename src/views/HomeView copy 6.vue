@@ -30,50 +30,37 @@ onMounted(() => {
     directionalLight.position.set(5, 5, 5).normalize()
     scene.add(directionalLight)
 
-    // 创建平面几何体和材质
-    const planeGeometry = new THREE.PlaneGeometry(5, 5)
+    // 加载纹理
     const textureLoader = new THREE.TextureLoader()
+    const texture = textureLoader.load('/public/test.webp')
 
-    const texture = textureLoader.load('/public/2.jpg', () => {
-        // 创建立方体几何体
-        // 手动设置 UV 映射
-        const uvAttribute = planeGeometry.attributes.uv
-        // const uvMapping = [
-        //     // Front face (正面)
-        //     0, 0, 1, 0, 1, 1, 0, 1,
-        //     // Back face (背面) - 不覆盖纹理
-        //     0, 0, 0, 0, 0, 0, 0, 0,
-        //     // Top face (顶部)
-        //     0, 0, 1, 0, 1, 1, 0, 1,
-        //     // Bottom face (底部)
-        //     0, 0, 1, 0, 1, 1, 0, 1,
-        //     // Right face (右侧)
-        //     0, 0, 1, 0, 1, 1, 0, 1,
-        //     // Left face (左侧)
-        //     0, 0, 1, 0, 1, 1, 0, 1
-        // ]
+    // 创建平面几何体
+    const boxGeometry = new THREE.PlaneGeometry(10, 20, 5)
 
-        const uvMapping = [
-            // Front face (正面)
-            0, 1, 1, 1, 1, 0, 0, 0,
-
-        ]
-        for (let i = 0; i < uvAttribute.count; i++) {
-            uvAttribute.setXY(i, uvMapping[i * 2], uvMapping[i * 2 + 1])
+    // 调整 UV 映射
+    const uvAttribute = boxGeometry.attributes.uv
+    for (let i = 0; i < uvAttribute.count; i++) {
+        const u = uvAttribute.getX(i)
+        const v = uvAttribute.getY(i)
+        if (i >= 8 && i < 12) { // 后面
+            uvAttribute.setXY(i, u * 0.5, v)
+        } else if (i >= 16 && i < 20) { // 左面
+            uvAttribute.setXY(i, u * 0.5 + 0.5, v)
         }
+    }
 
-        // 创建材质
-        const material = new THREE.MeshBasicMaterial({ map: texture })
-        const plane = new THREE.Mesh(planeGeometry, material)
+    // 创建材质数组，每个面一个材质
+    const materials = [
+        new THREE.MeshStandardMaterial({ color: 0xffffff }), // 前面
+        new THREE.MeshStandardMaterial({ map: texture }), // 后面
+        new THREE.MeshStandardMaterial({ color: 0xffffff }), // 上面
+        new THREE.MeshStandardMaterial({ color: 0xffffff }), // 下面
+        new THREE.MeshStandardMaterial({ map: texture }), // 左面
+        new THREE.MeshStandardMaterial({ color: 0xffffff })  // 右面
+    ]
 
-        scene.add(plane)
-        // 动画循环
-        const animate = () => {
-            requestAnimationFrame(animate)
-            renderer.render(scene, camera)
-        }
-        animate()
-    })
+    const box = new THREE.Mesh(boxGeometry, materials)
+    scene.add(box)
 
     // 动画循环
     const animate = () => {

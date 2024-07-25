@@ -32,23 +32,29 @@ onMounted(() => {
     directionalLight.position.set(5, 5, 5).normalize()
     scene.add(directionalLight)
 
-    // 加载纹理
-
-
     const textureLoader = new THREE.TextureLoader()
-    // 2.
     const texture = textureLoader.load('/public/test.webp')
 
-    texture.repeat.x = 1
-    texture.repeat.y = 1
-    texture.offset.x = -0.1
-    texture.offset.y = -0.1
-    // texture.wrapS = THREE.RepeatWrapping
-    // texture.wrapT = THREE.RepeatWrapping
-    texture.wrapS = THREE.MirroredRepeatWrapping
-    texture.wrapT = THREE.MirroredRepeatWrapping
+    // texture.repeat.x = 1
+    // texture.repeat.y = 1
+    // texture.offset.x = -0.1
+    // texture.offset.y = -0.1
+    texture.wrapS = THREE.RepeatWrapping
+    texture.wrapT = THREE.RepeatWrapping
+    // texture.wrapS = THREE.MirroredRepeatWrapping
+    // texture.wrapT = THREE.MirroredRepeatWrapping
 
     const boxGeometry = new THREE.BoxGeometry(2, 2, 2)
+
+    // 手动设置每个面的 UV 坐标
+    const uvAttribute = boxGeometry.attributes.uv
+    for (let i = 0; i < uvAttribute.count; i++) {
+        const u = (i % 2 === 0) ? 0 : 1
+        const v = (i % 4 < 2) ? 0 : 1
+        uvAttribute.setXY(i, u, v)
+    }
+    uvAttribute.needsUpdate = true
+
     const boxMaterial = new THREE.MeshStandardMaterial({
         color: 0xffffff,
         map: texture, // 2.重点位置
@@ -56,11 +62,9 @@ onMounted(() => {
     const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial)
     scene.add(boxMesh)
 
-
-
+    // 渲染函数
     function animate () {
         texture.offset.x += 0.001
-        // boxMesh.rotation.y += 0.01
         requestAnimationFrame(animate)
         renderer.render(scene, camera)
     }

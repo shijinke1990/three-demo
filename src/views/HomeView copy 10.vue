@@ -1,3 +1,7 @@
+<template>
+    <canvas ref="canvasRef"></canvas>
+</template>
+
 <script setup>
 import { onMounted, ref } from 'vue'
 import * as THREE from 'three'
@@ -26,29 +30,30 @@ onMounted(() => {
     directionalLight.position.set(5, 5, 5).normalize()
     scene.add(directionalLight)
 
-    // 创建多面体几何体
-    const dodecahedronGeometry = new THREE.TetrahedronGeometry(4, 0)
-    const dodecahedronMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-    const dodecahedronMesh = new THREE.Mesh(dodecahedronGeometry, dodecahedronMaterial)
-    scene.add(dodecahedronMesh)
+    // 加载纹理
+    const uvTexture = new THREE.TextureLoader().load('/public/2.jpg', () => {
+        // 创建平面几何体
+        const plain = new THREE.PlaneGeometry(20, 20, 5)
+
+        // 创建材质
+        const plainMaterial = new THREE.MeshBasicMaterial({ map: uvTexture })
+
+        // 创建平面网格
+        const plainMesh = new THREE.Mesh(plain, plainMaterial)
+
+        // 添加平面网格到场景
+        scene.add(plainMesh)
+
+        // 动画循环
+        const animate = () => {
+            requestAnimationFrame(animate)
+            renderer.render(scene, camera)
+        }
+        animate()
+    })
 
     // 添加轨道控制
     const controls = new OrbitControls(camera, renderer.domElement)
-
-    // 动画循环
-    const animate = () => {
-        requestAnimationFrame(animate)
-
-        // 旋转多面体
-        const time = Date.now() * 0.001
-        dodecahedronMesh.rotation.x = time
-        dodecahedronMesh.rotation.y = time
-
-        controls.update()
-        renderer.render(scene, camera)
-    }
-
-    animate()
 
     // 处理窗口大小调整
     window.addEventListener('resize', () => {
@@ -58,10 +63,6 @@ onMounted(() => {
     })
 })
 </script>
-
-<template>
-    <canvas ref="canvasRef"></canvas>
-</template>
 
 <style>
 body {

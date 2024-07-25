@@ -30,43 +30,20 @@ onMounted(() => {
     directionalLight.position.set(5, 5, 5).normalize()
     scene.add(directionalLight)
 
-    // 创建平面几何体和材质
-    const planeGeometry = new THREE.PlaneGeometry(5, 5)
-    const textureLoader = new THREE.TextureLoader()
-
-    const texture = textureLoader.load('/public/2.jpg', () => {
-        // 创建立方体几何体
-        // 手动设置 UV 映射
-        const uvAttribute = planeGeometry.attributes.uv
-        // const uvMapping = [
-        //     // Front face (正面)
-        //     0, 0, 1, 0, 1, 1, 0, 1,
-        //     // Back face (背面) - 不覆盖纹理
-        //     0, 0, 0, 0, 0, 0, 0, 0,
-        //     // Top face (顶部)
-        //     0, 0, 1, 0, 1, 1, 0, 1,
-        //     // Bottom face (底部)
-        //     0, 0, 1, 0, 1, 1, 0, 1,
-        //     // Right face (右侧)
-        //     0, 0, 1, 0, 1, 1, 0, 1,
-        //     // Left face (左侧)
-        //     0, 0, 1, 0, 1, 1, 0, 1
-        // ]
-
-        const uvMapping = [
-            // Front face (正面)
-            0, 1, 1, 1, 1, 0, 0, 0,
-
-        ]
-        for (let i = 0; i < uvAttribute.count; i++) {
-            uvAttribute.setXY(i, uvMapping[i * 2], uvMapping[i * 2 + 1])
-        }
+    // 加载纹理
+    const uvTexture = new THREE.TextureLoader().load('/public/2.jpg', () => {
+        // 创建平面几何体
+        const plain = new THREE.PlaneGeometry(20, 20, 5)
 
         // 创建材质
-        const material = new THREE.MeshBasicMaterial({ map: texture })
-        const plane = new THREE.Mesh(planeGeometry, material)
+        const plainMaterial = new THREE.MeshBasicMaterial({ map: uvTexture })
 
-        scene.add(plane)
+        // 创建平面网格
+        const plainMesh = new THREE.Mesh(plain, plainMaterial)
+
+        // 添加平面网格到场景
+        scene.add(plainMesh)
+
         // 动画循环
         const animate = () => {
             requestAnimationFrame(animate)
@@ -74,13 +51,6 @@ onMounted(() => {
         }
         animate()
     })
-
-    // 动画循环
-    const animate = () => {
-        requestAnimationFrame(animate)
-        renderer.render(scene, camera)
-    }
-    animate()
 
     // 添加轨道控制
     const controls = new OrbitControls(camera, renderer.domElement)

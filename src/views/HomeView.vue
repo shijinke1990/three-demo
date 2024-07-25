@@ -15,7 +15,7 @@ const canvasRef = ref(null)
 onMounted(() => {
     const scene = new THREE.Scene()
     // 创建相机
-    const camera = new THREE.PerspectiveCamera(5, window.innerWidth / window.innerHeight, 0.1, 1000)
+    const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.1, 1000)
     camera.position.z = 50
 
     // 创建渲染器
@@ -37,23 +37,28 @@ onMounted(() => {
 
     // texture.repeat.x = 1
     // texture.repeat.y = 1
+    // texture.repeat.set(1.1, 1.1) // 将纹理放大两倍
     // texture.offset.x = -0.1
     // texture.offset.y = -0.1
     texture.wrapS = THREE.RepeatWrapping
     texture.wrapT = THREE.RepeatWrapping
+    texture.offset.x += 0.1
+    texture.offset.y += 0.1
     // texture.wrapS = THREE.MirroredRepeatWrapping
     // texture.wrapT = THREE.MirroredRepeatWrapping
 
-    const boxGeometry = new THREE.BoxGeometry(2, 2, 2)
+    const boxGeometry = new THREE.BoxGeometry(14.5, 11.7, 2.5)
 
     // 手动设置每个面的 UV 坐标
     const uvAttribute = boxGeometry.attributes.uv
     for (let i = 0; i < uvAttribute.count; i++) {
         const u = (i % 2 === 0) ? 0 : 1
-        const v = (i % 4 < 2) ? 0 : 1
+        const v = (i % 4 < 2) ? 1 : 0
         uvAttribute.setXY(i, u, v)
     }
     uvAttribute.needsUpdate = true
+
+
 
     const boxMaterial = new THREE.MeshStandardMaterial({
         color: 0xffffff,
@@ -64,7 +69,7 @@ onMounted(() => {
 
     // 渲染函数
     function animate () {
-        texture.offset.x += 0.001
+
         requestAnimationFrame(animate)
         renderer.render(scene, camera)
     }

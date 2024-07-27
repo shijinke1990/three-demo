@@ -75,26 +75,153 @@ onMounted(() => {
     // const tetrahedronMesh = createMesh(vertices, indices, uv)
     // scene.add(tetrahedronMesh)
 
+    // const geometry = new THREE.BufferGeometry()
+    // const vertices = new Float32Array([
+    //     0, 0, 0,
+    //     1, 0, 0,
+    //     1, 1, 0,
+    //     0, 1, 0
+    // ])
+    // geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
+    // const indices = new Uint16Array([
+    //     0, 1, 2,
+    //     0, 2, 3
+    // ])
+    // geometry.setIndex(new THREE.BufferAttribute(indices, 1))
+
+    // geometry.addGroup(0, 3, 0)
+    // geometry.addGroup(3, 3, 1)
+
+    // const textureLoader = new THREE.TextureLoader()
+    // const texture = textureLoader.load('/public/9.jpeg')
+    // const material0 = new THREE.MeshStandardMaterial({
+    //     color: 0x8899ee,
+    //     side: THREE.DoubleSide,
+    //     // // wireframe: true,
+    //     // map: texture
+    // })
+    // const material1 = new THREE.MeshStandardMaterial({
+    //     color: 0x88ee99,
+    //     side: THREE.DoubleSide,
+    //     // // wireframe: true,
+    //     // map: texture
+    // })
+
+    // const mesh = new THREE.Mesh(geometry, [material0, material1])
+    // scene.add(mesh)
+
+
+    // const geometry = new THREE.BoxGeometry(1, 1, 1)
+
+    // const geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
+    // const vertices = new Float32Array([
+    //     0, 0, 0,
+    //     1, 0, 0,
+    //     1, 1, 0,
+    //     0, 1, 0
+    // ])
+    // geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
+
+    // geometry.clearGroups()
+
+    // 创建 BufferGeometry
     const geometry = new THREE.BufferGeometry()
+
+    // 定义顶点
+    // 定义顶点
     const vertices = new Float32Array([
-        0, 0, 0,
-        1, 0, 0,
-        0, 1, 0,
-        1, 0, 0,
-        0, 1, 0,
-        1, 1, 0
+
+        // 第一个面
+        - 1.0, -1.0, 0.0,
+        1.0, -1.0, 0.0,
+        1.0, 1.0, 0.0,
+        -1.0, 1.0, 0.0,
+
+        // // 第二个面
+        // -1.0, -1.0, -1.0,
+        // 1.0, -1.0, -1.0,
+        // 1.0, 1.0, -1.0,
+        // -1.0, 1.0, -1.0
     ])
+
+    // 定义索引
+    const indices = new Uint16Array([
+        // 第一个面
+        0, 1, 2,
+        0, 2, 3,
+        // // 第二个面
+        // 4, 5, 6,
+        // 4, 6, 7
+    ])
+
+    // 定义 UV 坐标
+    const uvs = new Float32Array([
+        // 第一个面显示纹理的左上部分
+        0.0, 0.0,
+        0.5, 0.0,
+        0.5, 0.5,
+        0.0, 0.5,
+        // 第二个面显示纹理的右下部分
+        0.5, 0.5,
+        1.0, 0.5,
+        1.0, 1.0,
+        0.5, 1.0
+    ])
+
+    // 设置几何体的属性
     geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
+    geometry.setIndex(new THREE.BufferAttribute(indices, 1))
+    geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2))
+
+    // 创建材质
+    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
+
+    // 创建网格
+    const mesh = new THREE.Mesh(geometry, material)
+
+    // 加载纹理
     const textureLoader = new THREE.TextureLoader()
     const texture = textureLoader.load('/public/9.jpeg')
-    const material = new THREE.MeshStandardMaterial({
-        color: 0x8899ee,
-        side: THREE.DoubleSide,
-        // // wireframe: true,
-        map: texture
-    })
-    const plane = new THREE.Mesh(geometry, material)
-    scene.add(plane)
+
+    // 为材质添加纹理
+    material.map = texture
+    material.needsUpdate = true // 确保材质更新
+
+    // 将网格添加到场景
+    scene.add(mesh)
+
+    // 清除默认分组
+    // geometry.clearGroups()
+
+    // // 添加自定义分组
+    // geometry.addGroup(0, 18, 0) // 前面
+    // // geometry.addGroup(6, 6, 1) // 后面
+    // // geometry.addGroup(12, 6, 2) // 顶面
+    // geometry.addGroup(18, 6, 1) // 底面
+    // geometry.addGroup(24, 6, 2) // 左面
+    // geometry.addGroup(30, 6, 3) // 右面
+
+    // const material0 = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+    // const material1 = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+    // const material2 = new THREE.MeshBasicMaterial({ color: 0x0000ff })
+    // const material3 = new THREE.MeshBasicMaterial({ color: 0xffff00 })
+    // const material4 = new THREE.MeshBasicMaterial({ color: 0xff00ff })
+    // const material5 = new THREE.MeshBasicMaterial({ color: 0x00ffff })
+
+    // const materials = [material0, material1, material2, material3]
+
+
+    //为cubeMesh添加纹理
+    // 为每个材质添加纹理
+    // materials.forEach(material => {
+    //     material.map = texture
+    //     material.needsUpdate = true // 确保材质更新
+    // })
+
+
+
+
+
 
 
 

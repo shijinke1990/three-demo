@@ -31,63 +31,133 @@ onMounted(() => {
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
     scene.add(ambientLight)
 
+
+
+
+    // // 创建材质
+    // const boxMaterial = new THREE.MeshStandardMaterial({
+    //     color: 0xffffff,
+    //     map: texture
+    // })
+
+
+    // const indices = new Uint16Array([
+    //     0, 1, 2, // 面1
+    //     0, 2, 3, // 面2
+    //     0, 3, 1, // 面3
+    //     1, 3, 2  // 面4
+    // ])
+
+    // const uv = new Float32Array([
+    //     0.5, 1,  // 顶点1的UV坐标
+    //     0, 0,    // 顶点2的UV坐标
+    //     1, 0,    // 顶点3的UV坐标
+    //     0.5, 0.5 // 顶点4的UV坐标
+    // ])
+
+    // function createMesh (vertices, indices, uv, position = new THREE.Vector3(0, 0, 0)) {
+    //     const geometry = new THREE.BufferGeometry()
+    //     geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
+    //     geometry.setIndex(new THREE.BufferAttribute(indices, 1))
+    //     geometry.setAttribute('uv', new THREE.BufferAttribute(uv, 2))
+    //     const mesh = new THREE.Mesh(geometry, boxMaterial)
+    //     mesh.position.copy(position)
+    //     return mesh
+    // }
+
+    // const tetrahedronMesh = createMesh(vertices, indices, uv)
+    // scene.add(tetrahedronMesh)
+
+    // const geometry = new THREE.BufferGeometry()
+    // const vertices = new Float32Array([
+    //     0, 0, 0,
+    //     1, 0, 0,
+    //     1, 1, 0,
+    //     0, 1, 0
+    // ])
+    // geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
+    // const indices = new Uint16Array([
+    //     0, 1, 2,
+    //     0, 2, 3
+    // ])
+    // geometry.setIndex(new THREE.BufferAttribute(indices, 1))
+
+    // geometry.addGroup(0, 3, 0)
+    // geometry.addGroup(3, 3, 1)
+
+    // const textureLoader = new THREE.TextureLoader()
+    // const texture = textureLoader.load('/public/9.jpeg')
+    // const material0 = new THREE.MeshStandardMaterial({
+    //     color: 0x8899ee,
+    //     side: THREE.DoubleSide,
+    //     // // wireframe: true,
+    //     // map: texture
+    // })
+    // const material1 = new THREE.MeshStandardMaterial({
+    //     color: 0x88ee99,
+    //     side: THREE.DoubleSide,
+    //     // // wireframe: true,
+    //     // map: texture
+    // })
+
+    // const mesh = new THREE.Mesh(geometry, [material0, material1])
+    // scene.add(mesh)
+
+
+    // const geometry = new THREE.BoxGeometry(1, 1, 1)
+
+    // const geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
+    // const vertices = new Float32Array([
+    //     0, 0, 0,
+    //     1, 0, 0,
+    //     1, 1, 0,
+    //     0, 1, 0
+    // ])
+    // geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
+
+    // geometry.clearGroups()
+
+    // 创建 BufferGeometry
     const geometry = new THREE.BufferGeometry()
 
+    // 定义顶点
     // 定义顶点
     const vertices = new Float32Array([
         // 第一个面
         0, 0, 0,
         0, 0, 1.25,
-        0, 11.7, 1.25,
-        0, 11.7, 0,
+        0, 12.7, 1.25,
+        0, 12.7, 0,
 
+        // 第二个面
         0, 0, 1.25,
-        14.5, 0, 1.25,
-        14.5, 11.7, 1.25,
-        0, 11.7, 1.25,
+        15.5, 0, 1.25,
+        15.5, 12.7, 1.25,
+        0, 12.7, 1.25,
 
-        14.5, 0, 1.25,
-        14.5, 0, 0,
-        14.5, 11.7, 0,
-        14.5, 11.7, 1.25,
+        //  第三个面
+        15.5, 0, 1.25,
+        15.5, 0, 0,
+        15.5, 12.7, 0,
+        15.5, 12.7, 1.25,
 
-
-        14.5, 0, 0,
-        14.25, 0, 0,
-        14.25, 11.7, 0,
-        14.5, 11.7, 0,
-
-
-        0.25, 0, 0,
+        //  第四个面
+        15.5, 0, 0,
         0, 0, 0,
-        0, 11.7, 0,
-        0.25, 11.7, 0,
+        0, 12.7, 0,
+        15.5, 12.7, 0,
 
+        //  第五个面
+        0, 12.7, 1.25,
+        15.5, 12.7, 1.25,
+        15.5, 12.7, 0,
+        0, 12.7, 0,
 
-        0, 11.7, 1.25,
-        14.5, 11.7, 1.25,
-        14.5, 11.7, 0,
-        0, 11.7, 0,
-
-
-
-        0, 0, 0,
-        14.5, 0, 0,
-        14.5, 0, 1.25,
-        0, 0, 1.25,
-
-        14.5, 0, 0,
-        0, 0, 0,
-        0, 0.25, 0,
-        14.5, 0.25, 0,
-
-
-        14.5, 11.45, 0,
-        0, 11.45, 0,
-        0, 11.7, 0,
-        14.5, 11.7, 0,
-
-
+        // //  第六个面
+        // 0, 0, 0,
+        // 15.5, 0, 0,
+        // 15.5, 0, 1.25,
+        // 0, 0, 1.25
 
 
 
@@ -95,39 +165,29 @@ onMounted(() => {
 
     // 定义索引
     const indices = new Uint16Array([
-
+        // 第一个面
         0, 1, 2,
         0, 2, 3,
-
+        // // 第二个面
         4, 5, 6,
         4, 6, 7,
-
+        // // 第三个面
         8, 9, 10,
         8, 10, 11,
 
-
-
+        // // 第四个面
         12, 13, 14,
         12, 14, 15,
 
-
+        // // 第五个面
         16, 17, 18,
         16, 18, 19,
 
 
+        // // 第六个面
+
         20, 21, 22,
-        20, 22, 23,
-
-
-        24, 25, 26,
-        24, 26, 27,
-
-
-        28, 29, 30,
-        28, 30, 31,
-
-        32, 33, 34,
-        32, 34, 35,
+        20, 22, 23
 
 
 
@@ -138,8 +198,16 @@ onMounted(() => {
 
     // 定义 UV 坐标
     const uvs = new Float32Array([
-
-
+        // // 第一个面显示纹理的左上部分
+        // 0.0, 0.0,
+        // 0.5, 0.0,
+        // 0.5, 0.5,
+        // 0.0, 0.5,
+        // // 第二个面显示纹理的右下部分
+        // 0.5, 0.5,
+        // 1.0, 0.5,
+        // 1.0, 1.0,
+        // 0.5, 1.0
         0.25 / 17, 1.5 / 14.2,
         1.5 / 17, 1.5 / 14.2,
         1.5 / 17, 12.7 / 14.2,
@@ -154,47 +222,21 @@ onMounted(() => {
         16.75 / 17, 1.5 / 14.2,
         16.75 / 17, 12.7 / 14.2,
         15.5 / 17, 12.7 / 14.2,
-
-
-
-
-
 
         16.75 / 17, 1.5 / 14.2,
         17 / 17, 1.5 / 14.2,
         17 / 17, 12.7 / 14.2,
         16.75 / 17, 12.7 / 14.2,
 
-        0, 1.5 / 14.2,
-        0.25 / 17, 1.5 / 14.2,
-        0.25 / 17, 12.7 / 14.2,
-        0, 12.7 / 14.2,
-
-
         1.5 / 17, 12.7 / 14.2,
         15.5 / 17, 12.7 / 14.2,
         15.5 / 17, 13.95 / 14.2,
         1.5 / 17, 13.95 / 14.2,
 
-
         0.25 / 17, 0,
         15.5 / 17, 0,
         15.5 / 17, 1.5 / 14.2,
-        0.25 / 17, 1.5 / 14.2,
-
-
-        1.5 / 17, 0,
-        15.5 / 17, 0,
-        15.5 / 17, 0.25 / 14.2,
-        1.5 / 17, 0.25 / 14.2,
-
-
-        1.5 / 17, 13.95 / 14.2,
-        15.5 / 17, 13.95 / 14.2,
-        15.5 / 17, 14.2 / 14.2,
-        1.5 / 17, 14.2 / 14.2,
-
-
+        0.25 / 17, 1.5 / 14.2
 
     ])
 

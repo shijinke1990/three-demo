@@ -7,9 +7,6 @@ import { onMounted, ref } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-import { SubdivisionModifier } from 'three-subdivision-modifier'
-
-
 const canvasRef = ref(null)
 
 onMounted(() => {
@@ -18,9 +15,9 @@ onMounted(() => {
 
     // 创建相机
     const camera = new THREE.PerspectiveCamera(5, window.innerWidth / window.innerHeight, 0.1, 1000)
-    camera.position.x = -61.6
-    camera.position.y = 9.3
-    camera.position.z = 149
+    camera.position.x = -72
+    camera.position.y = 2
+    camera.position.z = 145
 
     // 创建渲染器
     const renderer = new THREE.WebGLRenderer({
@@ -35,13 +32,12 @@ onMounted(() => {
     const controls = new OrbitControls(camera, renderer.domElement)
 
     // 添加环境光
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1)
-    scene.add(ambientLight)
+    // const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+    // scene.add(ambientLight)
 
     //添加点光源
-    // const pointLight = new THREE.PointLight(0xffffff, 1000)
-    const pointLight = new THREE.DirectionalLight(0xffffff, 10)
-    pointLight.position.set(60, 8, 12)
+    const pointLight = new THREE.PointLight(0xffffff, 1000)
+    pointLight.position.set(12, 8, 12)
     pointLight.castShadow = true // 启用阴影
     scene.add(pointLight)
 
@@ -58,8 +54,6 @@ onMounted(() => {
     // 添加坐标辅助器
     const axesHelper = new THREE.AxesHelper(500)
     scene.add(axesHelper)
-
-
 
 
     const geometry = new THREE.BufferGeometry()
@@ -187,19 +181,24 @@ onMounted(() => {
     geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
     geometry.setIndex(new THREE.BufferAttribute(indices, 1))
     geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2))
-    // 计算法线
-    geometry.computeVertexNormals()
 
-    // const material = new THREE.MeshToonMaterial({
-    //     color: 0xffffff,
-    //     side: THREE.DoubleSide,
-    //     roughness: 1.0, // 高粗糙度以模拟棉布效果
-    //     metalness: 0.0 // 非金属
-    // })
+
+
     // 加载纹理
     const textureLoader = new THREE.TextureLoader()
     const texture = textureLoader.load('/public/test.webp')
-    // const material = new THREE.MeshStandardMaterial({
+    const material = new THREE.MeshPhysicalMaterial({
+        map: texture,
+        // color: 0xffffff,
+        // side: THREE.DoubleSide,
+        // roughness: 1.0, // 高粗糙度以模拟棉布效果
+        // metalness: 0.0 // 非金属
+
+        metalness: 0.5, // 设置金属度
+        roughness: 0.5  // 设置粗糙度
+    })
+
+    // const material = new THREE.MeshPhysicalMaterial({
     //     // map: texture,
     //     // color: 0xffffff,
     //     // side: THREE.DoubleSide,
@@ -210,33 +209,11 @@ onMounted(() => {
     //     roughness: 0.5  // 设置粗糙度
     // })
 
-    // 使用细分曲面修改器
-    // 使用细分曲面修改器
-    const modifier = new SubdivisionModifier(2)
-    const smoothGeometry = modifier.modify(geometry)
-
-
-    const material = new THREE.MeshPhysicalMaterial({
-        map: texture,
-        // color: 0xffffff,
-        // side: THREE.DoubleSide,
-        roughness: 1.0, // 高粗糙度以模拟棉布效果
-        metalness: 0.0 // 非金属
-
-
-    })
-
-
-
-    // const cubeMesh = new THREE.Mesh(cube, material)
-    // cubeMesh.position.set(0, 0, 0)
-    // scene.add(cubeMesh)
-
 
 
 
     // 创建网格
-    const mesh = new THREE.Mesh(smoothGeometry, material)
+    const mesh = new THREE.Mesh(geometry, material)
 
 
 
@@ -258,7 +235,6 @@ onMounted(() => {
     function animate () {
         requestAnimationFrame(animate)
         // planMesh.rotation.x += 0.01
-        console.log(camera.position)
         controls.update()
         renderer.render(scene, camera)
     }

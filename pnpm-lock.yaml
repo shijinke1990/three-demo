@@ -11,6 +11,12 @@ dependencies:
   three:
     specifier: ^0.166.1
     version: 0.166.1
+  three-subdivide:
+    specifier: ^1.1.5
+    version: 1.1.5(three@0.166.1)
+  three-subdivision-modifier:
+    specifier: ^1.0.5
+    version: 1.0.5(three@0.166.1)
   vue:
     specifier: ^3.4.29
     version: 3.4.33
@@ -2898,6 +2904,22 @@ packages:
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
     dev: true
+
+  /three-subdivide@1.1.5(three@0.166.1):
+    resolution: {integrity: sha512-eEWMevrsHIMnC1xbsZSQZIB8QBr8XeXZhTSAdYrLm3ZC/yTdR4ocOZ2Qi+gEyPJFOt3iirQ+SQR0jCamk7e6FQ==}
+    peerDependencies:
+      three: '>= 0.125.0'
+    dependencies:
+      three: 0.166.1
+    dev: false
+
+  /three-subdivision-modifier@1.0.5(three@0.166.1):
+    resolution: {integrity: sha512-3L0zeYo9iDIvkfAV9wq6/DCEXXxNUYpB0JaRrEwjrLLtH6I769yHdwFAh8xQiCanUZNABVkwqMyEjh2WLuq/9w==}
+    peerDependencies:
+      three: '>=0.73.2'
+    dependencies:
+      three: 0.166.1
+    dev: false
 
   /three@0.166.1:
     resolution: {integrity: sha512-LtuafkKHHzm61AQA1be2MAYIw1IjmhOUxhBa0prrLpEMWbV7ijvxCRHjSgHPGp2493wLBzwKV46tA9nivLEgKg==}

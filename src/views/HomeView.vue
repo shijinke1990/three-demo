@@ -14,7 +14,7 @@ onMounted(() => {
     const scene = new THREE.Scene()
 
     // 创建相机
-    const camera = new THREE.PerspectiveCamera(5, window.innerWidth / window.innerHeight, 0.1, 1000)
+    const camera = new THREE.PerspectiveCamera(5.75, window.innerWidth / window.innerHeight, 50, 1000)
     camera.position.x = -61.6
     camera.position.y = -8
     camera.position.z = 149

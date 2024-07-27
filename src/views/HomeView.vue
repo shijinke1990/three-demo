@@ -7,8 +7,6 @@ import { onMounted, ref } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-
-
 const canvasRef = ref(null)
 
 onMounted(() => {
@@ -18,7 +16,7 @@ onMounted(() => {
     // 创建相机
     const camera = new THREE.PerspectiveCamera(5, window.innerWidth / window.innerHeight, 0.1, 1000)
     camera.position.x = -61.6
-    camera.position.y = 6
+    camera.position.y = -8
     camera.position.z = 149
 
     // 创建渲染器
@@ -34,7 +32,7 @@ onMounted(() => {
     const controls = new OrbitControls(camera, renderer.domElement)
 
     // 添加环境光
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2)
     scene.add(ambientLight)
 
     //添加点光源
@@ -43,22 +41,6 @@ onMounted(() => {
     pointLight.position.set(12, 8, 30)
     pointLight.castShadow = true // 启用阴影
     scene.add(pointLight)
-
-    // 调整点光源的阴影设置
-    pointLight.shadow.mapSize.width = 1024
-    pointLight.shadow.mapSize.height = 1024
-    pointLight.shadow.camera.near = 0.5
-    pointLight.shadow.camera.far = 500
-
-    //光源辅助器
-    const helper = new THREE.PointLightHelper(pointLight, 1)
-    scene.add(helper)
-
-    // 添加坐标辅助器
-    const axesHelper = new THREE.AxesHelper(500)
-    scene.add(axesHelper)
-
-
 
 
     const geometry = new THREE.BufferGeometry()
@@ -194,15 +176,29 @@ onMounted(() => {
     // 加载纹理
     const textureLoader = new THREE.TextureLoader()
     const texture = textureLoader.load('/public/test.webp')
+    const normalTexture = textureLoader.load('/public/c3.jpeg')
+    const aoMapTexture = textureLoader.load('/public/c13.png')
 
 
     const material = new THREE.MeshPhysicalMaterial({
         map: texture,
         // color: 0xffffff,
         side: THREE.DoubleSide,
-        roughness: 1.0, // 高粗糙度以模拟棉布效果
-        metalness: 0.0 // 非金属
+        color: 0xffffff, // 棉布的颜色
+        roughness: 1, // 较高的粗糙度
+        metalness: 0, // 非金属
+        clearcoat: 0, // 无清漆层
+        clearcoatRoughness: 1, // 清漆层的粗糙度
+        reflectivity: 0, // 较低的反射率
+        sheen: 0.5, // 模拟棉布的光泽
+        bumpMap: normalTexture,// 凹凸贴图
+        bumpScale: 1.5,
+        aoMap: aoMapTexture, // 环境光遮蔽贴图
+        aoMapIntensity: 0.4, // 环境光遮蔽贴图的强度
+
     })
+
+
 
     // 创建网格
     const mesh = new THREE.Mesh(geometry, material)
@@ -220,30 +216,6 @@ onMounted(() => {
 
     scene.add(mesh)
 
-    // 创建平面作为背景图
-    const planeGeometry = new THREE.PlaneGeometry(50, 50)
-    const planeMaterial = new THREE.ShadowMaterial({
-        opacity: 0.5,
-        color: 0xffffff,
-        side: THREE.DoubleSide
-    })
-    // const planeMaterial = new THREE.MeshBasicMaterial({
-
-    // })
-    // const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.5 })
-    const plane = new THREE.Mesh(planeGeometry, planeMaterial)
-    plane.rotation.x = Math.PI
-    plane.position.z = -0.8
-    plane.receiveShadow = true // 启用接收阴影
-    scene.add(plane)
-
-    // const planeGeometry = new THREE.PlaneGeometry(200, 200)
-    // const planeMaterial = new THREE.MeshBasicMaterial()
-    // const plane = new THREE.Mesh(planeGeometry, planeMaterial)
-    // plane.rotation.x = Math.PI
-    // plane.position.z = -2
-    // plane.receiveShadow = true // 启用接收阴影
-    // scene.add(plane)
 
 
     // 渲染循环

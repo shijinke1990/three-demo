@@ -22,14 +22,41 @@ onMounted(() => {
 
     // 创建渲染器
     const renderer = new THREE.WebGLRenderer({
-        canvas: canvasRef.value
+        canvas: canvasRef.value,
+        antialias: true // 启用抗锯齿
     })
     renderer.setSize(window.innerWidth, window.innerHeight)
 
 
+
+
     // 添加灯光
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2)
     scene.add(ambientLight)
+
+    // 添加点光源
+    const pointLight = new THREE.PointLight(0xff0000, 1, 100)
+    pointLight.position.set(20, 0, 100)
+    pointLight.castShadow = true // 启用阴影
+    scene.add(pointLight)
+
+    // 检查光源的阴影设置
+    pointLight.shadow.mapSize.width = 1024
+    pointLight.shadow.mapSize.height = 1024
+    pointLight.shadow.camera.near = 0.5
+    pointLight.shadow.camera.far = 500
+
+    // 添加辅助工具以可视化光源
+    const helper = new THREE.PointLightHelper(pointLight, 5)
+    scene.add(helper)
+
+    const cube = new THREE.BoxGeometry(10, 10, 10)
+    const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xffff00 })
+    const cubeMesh = new THREE.Mesh(cube, cubeMaterial)
+    cubeMesh.position.set(20, 0, 100)
+    scene.add(cubeMesh)
+
+
 
     const geometry = new THREE.BufferGeometry()
 
@@ -204,14 +231,22 @@ onMounted(() => {
     geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2))
 
     // 创建材质
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
-
+    const material = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide,
+        roughness: 1.0, // 高粗糙度以模拟棉布效果
+        metalness: 0.0 // 非金属
+    })
     // 创建网格
     const mesh = new THREE.Mesh(geometry, material)
 
     // 加载纹理
     const textureLoader = new THREE.TextureLoader()
     const texture = textureLoader.load('/public/test.webp')
+
+    texture.minFilter = THREE.LinearFilter
+    texture.magFilter = THREE.LinearFilter
+    texture.anisotropy = renderer.capabilities.getMaxAnisotropy()
 
     // 为材质添加纹理
     material.map = texture
@@ -254,8 +289,7 @@ onMounted(() => {
         requestAnimationFrame(animate)
         // controls.update()
         renderer.render(scene, camera)
-        //打印当前相机位置
-        console.log(camera.position)
+
     }
     animate()
 

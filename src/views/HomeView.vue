@@ -16,9 +16,9 @@ onMounted(() => {
 
     // 创建相机
     const camera = new THREE.PerspectiveCamera(5, window.innerWidth / window.innerHeight, 0.1, 1000)
-    camera.position.x = 10
-    camera.position.y = 5
-    camera.position.z = 40
+    camera.position.x = -72
+    camera.position.y = 2
+    camera.position.z = 145
 
     // 创建渲染器
     const renderer = new THREE.WebGLRenderer({
@@ -217,37 +217,11 @@ onMounted(() => {
     material.map = texture
     material.needsUpdate = true // 确保材质更新
 
+    //将网格移至中心
+    mesh.position.set(-7.25, -5.85, -0.625)
+
     // 将网格添加到场景
     scene.add(mesh)
-
-    // 清除默认分组
-    // geometry.clearGroups()
-
-    // // 添加自定义分组
-    // geometry.addGroup(0, 18, 0) // 前面
-    // // geometry.addGroup(6, 6, 1) // 后面
-    // // geometry.addGroup(12, 6, 2) // 顶面
-    // geometry.addGroup(18, 6, 1) // 底面
-    // geometry.addGroup(24, 6, 2) // 左面
-    // geometry.addGroup(30, 6, 3) // 右面
-
-    // const material0 = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-    // const material1 = new THREE.MeshBasicMaterial({ color: 0xff0000 })
-    // const material2 = new THREE.MeshBasicMaterial({ color: 0x0000ff })
-    // const material3 = new THREE.MeshBasicMaterial({ color: 0xffff00 })
-    // const material4 = new THREE.MeshBasicMaterial({ color: 0xff00ff })
-    // const material5 = new THREE.MeshBasicMaterial({ color: 0x00ffff })
-
-    // const materials = [material0, material1, material2, material3]
-
-
-    //为cubeMesh添加纹理
-    // 为每个材质添加纹理
-    // materials.forEach(material => {
-    //     material.map = texture
-    //     material.needsUpdate = true // 确保材质更新
-    // })
-
 
 
 
@@ -268,6 +242,9 @@ onMounted(() => {
     controls.autoRotate = true
     controls.autoRotateSpeed = 1
 
+    //打印当前相机位置
+    console.log(camera.position)
+
 
     const axesHelper = new THREE.AxesHelper(500)
     scene.add(axesHelper)
@@ -278,7 +255,7 @@ onMounted(() => {
         // controls.update()
         renderer.render(scene, camera)
         //打印当前相机位置
-        // console.log(camera.position)
+        console.log(camera.position)
     }
     animate()
 

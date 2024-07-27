@@ -189,7 +189,7 @@ onMounted(() => {
     // 计算法线
     geometry.computeVertexNormals()
 
-    // const material = new THREE.MeshToonMaterial({
+
 
     // 加载纹理
     const textureLoader = new THREE.TextureLoader()
@@ -219,6 +219,31 @@ onMounted(() => {
     mesh.position.set(-7.25, -5.85, -0.625)
 
     scene.add(mesh)
+
+    // 创建平面作为背景图
+    const planeGeometry = new THREE.PlaneGeometry(50, 50)
+    const planeMaterial = new THREE.ShadowMaterial({
+        opacity: 0.5,
+        color: 0xffffff,
+        side: THREE.DoubleSide
+    })
+    // const planeMaterial = new THREE.MeshBasicMaterial({
+
+    // })
+    // const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.5 })
+    const plane = new THREE.Mesh(planeGeometry, planeMaterial)
+    plane.rotation.x = Math.PI
+    plane.position.z = -0.8
+    plane.receiveShadow = true // 启用接收阴影
+    scene.add(plane)
+
+    // const planeGeometry = new THREE.PlaneGeometry(200, 200)
+    // const planeMaterial = new THREE.MeshBasicMaterial()
+    // const plane = new THREE.Mesh(planeGeometry, planeMaterial)
+    // plane.rotation.x = Math.PI
+    // plane.position.z = -2
+    // plane.receiveShadow = true // 启用接收阴影
+    // scene.add(plane)
 
 
     // 渲染循环

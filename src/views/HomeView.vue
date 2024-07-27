@@ -32,7 +32,7 @@ onMounted(() => {
     const controls = new OrbitControls(camera, renderer.domElement)
 
     // 添加环境光
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1)
     scene.add(ambientLight)
 
     //添加点光源

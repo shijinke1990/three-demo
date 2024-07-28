@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
@@ -229,6 +229,21 @@ onMounted(() => {
     }
 
     animate()
+
+    // 处理窗口大小调整
+    const handleResize = () => {
+        camera.aspect = window.innerWidth / window.innerHeight
+        camera.updateProjectionMatrix()
+        renderer.setSize(window.innerWidth, window.innerHeight)
+    }
+
+    // 处理窗口大小调整
+    window.addEventListener('resize', handleResize)
+
+    // 卸载组件时销毁场景
+    onUnmounted(() => {
+        window.removeEventListener('resize', handleResize)
+    })
 })
 </script>
 
